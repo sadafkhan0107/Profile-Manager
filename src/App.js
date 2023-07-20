@@ -1,23 +1,28 @@
-import logo from './logo.svg';
 import './App.css';
+import CreateProfile from './components/Profile/CreateProfile';
+import Header from './components/Header/Header';
+import ProfileGrid from './components/ProfileGrid/ProfileGrid';
+import Delete from './components/Extras/Delete';
+import { useState } from 'react';
+import { useDelete } from './context/delete-context';
+import { useEditProfile } from './context/edit-profile-context';
+import EditProfile from './components/Profile/EditProfile';
+import Filter from './components/Header/Filter';
+import ProfileList from './components/ProfileList/ProfileList';
 
 function App() {
+  const [isCreateProfileModal, setIsCreateProfileModal] = useState(false);
+  const {isDeleteModal} = useDelete();
+  const {isEditProfileModal,setIsEditProfileModal} = useEditProfile();
+  const [view, setView] = useState('grid');
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="App d-flex d-column gap-m">
+      <Header setIsCreateProfileModal={setIsCreateProfileModal} setView={setView} />
+      <Filter />
+      {view === 'grid' ? <ProfileGrid /> : <ProfileList />}
+      {isCreateProfileModal && <CreateProfile setIsCreateProfileModal={setIsCreateProfileModal}/>}
+      {isDeleteModal && <Delete />}
+      {isEditProfileModal && <EditProfile setIsEditProfileModal={setIsEditProfileModal}/>}
     </div>
   );
 }
