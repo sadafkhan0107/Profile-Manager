@@ -57,8 +57,8 @@ export default function ProfileList() {
               <TableCell component="th" scope="row" sx={{ width: 300 }}>
                 <ListItem
                     secondaryAction={
-                        <IconButton aria-label="delete">
-                        <VerifiedIcon />
+                        <IconButton aria-label="Verified Icon">
+                        <VerifiedIcon color="primary"/>
                         </IconButton>
                     }
                     >

@@ -24,7 +24,7 @@ const Header = ({setIsCreateProfileModal, setView}) => {
     return(
         <>
             <div className='d-flex gap-m'>
-                <TextField id="outlined-basic" label="Search" variant="outlined" onChange={handleSearchChange} className='search-input'/>
+                <TextField id="outlined-basic" placeholder="Search" variant="outlined" onChange={handleSearchChange} className='search-input'/>
                 <Button variant="contained" startIcon={<PersonAddIcon />} className='font-10' onClick={handleCreateProfileModal}>
                     Create Profile
                 </Button>

@@ -12,15 +12,22 @@ import Settings from '../Extras/Settings';
 import { useEditProfile } from '../../context/edit-profile-context';
 
 
+
 export default function ProfileCard({profile}) {
+   const [anchorEl, setAnchorEl] = React.useState(null);
     const [isSettingsOpen, setIsSettingOpen] = useState(false)
     const {id, first_name, last_name, email, is_verified, image_url, description} = profile
-    const handleSettingClick = (e) => {
-        setIsSettingOpen(true)
-    }
+    // const handleSettingClick = (e) => {
+    //     setIsSettingOpen(true)
+    // }
+    const handleSettingClick = (event) => {
+      setAnchorEl(event.currentTarget);
+      console.log(event.currentTarget)
+    };
 
   return (
-    <div className='relative'>
+    // <div className='relative'>
+    <>
         <Card sx={{ maxWidth: 345 }}>
       <CardHeader
         avatar={
@@ -31,7 +38,13 @@ export default function ProfileCard({profile}) {
             <MoreVertIcon />
           </IconButton>
         }
-        title= {first_name + " " + last_name + <VerifiedIcon color='#3b82f6'/> } 
+        title= {
+          <div className='d-flex align-center gap-s'>
+            <Typography variant="subtitle2" component="span" sx={{ flexGrow: 1 }}>
+              {first_name} {last_name}
+            </Typography>
+            <VerifiedIcon color='primary'/>
+          </div>}
         subheader= {email}
       />
       <CardContent>
@@ -40,8 +53,8 @@ export default function ProfileCard({profile}) {
         </Typography>
       </CardContent>
     </Card>
-     {isSettingsOpen && <Settings id={id} setIsSettingOpen={setIsSettingOpen}/>}
-    </div>
+     <Settings id={id} anchorEl={anchorEl} setAnchorEl={setAnchorEl}/>
+    </>
     
   );
 }
