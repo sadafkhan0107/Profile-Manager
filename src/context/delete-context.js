@@ -3,11 +3,11 @@ import { useContext, createContext,  useState} from "react";
 const DeleteContext = createContext()
 
 const DeleteProvider = ({children}) => {
-    const [isDeleteModal, setIsDeleteModal] = useState(false);
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [itemToDelete, setItemToDelete] = useState()
     
     return(
-        <DeleteContext.Provider value={{isDeleteModal,setIsDeleteModal,itemToDelete,setItemToDelete}}>
+        <DeleteContext.Provider value={{isDeleteModalOpen, setIsDeleteModalOpen, itemToDelete,setItemToDelete}}>
           {children}
        </DeleteContext.Provider>
     )

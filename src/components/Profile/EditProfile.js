@@ -1,110 +1,119 @@
-import TextField from '@mui/material/TextField';
-import Switch from '@mui/material/Switch';
-import Button from '@mui/material/Button';
+import { FormLabel, FormControl, Box, Modal, IconButton, Button, Switch, TextField } from '@mui/material';
 import { useState } from 'react';
-import { useProfile } from '../../context/profile-context';
-import FormControl from '@mui/material/FormControl';
-import { v4 as uuid} from 'uuid';
-import { FormLabel } from '@mui/material';
+import { useProfile, useEditProfile } from '../../context';
 import CloseIcon from '@mui/icons-material/Close';
-import IconButton from '@mui/material/IconButton';
-import { useEditProfile } from '../../context/edit-profile-context';
-import Modal from '@mui/material/Modal';
 
 const EditProfile = () => {
     const {data, setData} = useProfile();
-    const {editOpen, setEditOpen, editId, setEditId} = useEditProfile()
+    const {editOpen, setEditOpen, editId} = useEditProfile()
     const profile = data?.find((profile) => profile.id === editId)
     const [updatedProfile, setUpdatedProfile] = useState(profile)
-    console.log(profile)
 
     const handleClose = () => {
         setEditOpen(false)
     }
+
     const handleImg = (e) =>{
-        setUpdatedProfile({...profile, image_url: e.target.value})
-        // setUpdatedProfile({...data, image_url: e.target.value})
+        setUpdatedProfile({...updatedProfile, image_url: e.target.value})
     }
+
     const handleFirstName = (e) => {
-        setUpdatedProfile({...profile, first_name: e.target.value})
+        setUpdatedProfile({...updatedProfile, first_name: e.target.value})
     }
+
     const handleLastName = (e) => {
-        setUpdatedProfile({...profile, last_name: e.target.value})
+        setUpdatedProfile({...updatedProfile, last_name: e.target.value})
     }
+
     const handleEmail = (e) => {
-        setUpdatedProfile({...profile, email: e.target.value})
+        setUpdatedProfile({...updatedProfile, email: e.target.value})
     }
+
     const handleVerify = (e) => {
-        setUpdatedProfile({...profile, is_verified: e.target.checked})
+        setUpdatedProfile({...updatedProfile, is_verified: e.target.checked})
     }
+
     const handleDescription = (e) => {
-        setUpdatedProfile({...profile, description: e.target.value})
+        setUpdatedProfile({...updatedProfile, description: e.target.value})
     }
+
     const handleSubmit = (e) => {
         e.preventDefault();
         let newArr = data.map((profile) => profile.id === updatedProfile.id ? updatedProfile : profile)
         setData(newArr)
         setEditOpen(false)
     }
+
+    const style = {
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: '70vw',
+        bgcolor: 'background.paper',
+        border: '2px solid #000',
+        boxShadow: 24,
+        p: 4,
+      };
    
     return(
-        // <div className='fixed top-0 left-0 d-flex align-center justify-center w-100 h-100 z-99'>
-                  <Modal
-                        open={editOpen}
-                        onClose={handleClose}
-                        aria-labelledby="modal-modal-title"
-                        aria-describedby="modal-modal-description"
-                    >
-            <div className='d-flex d-column gap-m pd-32'>
-                 <div className='mg-left-auto'>
-                    <IconButton aria-label="close" onClick={handleClose}>
-                    <CloseIcon />
-                   </IconButton>
-                 </div>
-                <form onSubmit={handleSubmit}>
-                    <div className='d-flex d-column gap-s'>
-                        <FormControl>
-                            <FormLabel>Image Link</FormLabel>
-                            <TextField required name="image" value={updatedProfile?.image_url} sx={{ maxWidth: 800 }} variant="outlined" onChange={handleImg} />
-                        </FormControl>
+        <Modal
+            open={editOpen}
+            onClose={handleClose}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+        >
+            <Box sx={style}>
+                <div className='d-flex d-column gap-m pd-32'>
+                    <div className='mg-left-auto'>
+                        <IconButton aria-label="close" onClick={handleClose}>
+                        <CloseIcon />
+                        </IconButton>
                     </div>
-                    <div className='d-flex gap-m'>
+                    <form onSubmit={handleSubmit}>
                         <div className='d-flex d-column gap-s'>
                             <FormControl>
-                                <FormLabel>First name</FormLabel>
-                                <TextField required id="outlined-basic" value={updatedProfile?.first_name} sx={{ maxWidth: 392 }} variant="outlined" onChange={handleFirstName}/>
+                                <FormLabel>Image Link</FormLabel>
+                                <TextField required name="image" value={updatedProfile?.image_url} sx={{ maxWidth: 800 }} variant="outlined" onChange={handleImg} />
+                            </FormControl>
+                        </div>
+                        <div className='d-flex gap-m max-width'>
+                            <div className='d-flex d-column gap-s width-48'>
+                                <FormControl>
+                                    <FormLabel>First name</FormLabel>
+                                    <TextField required id="outlined-basic" value={updatedProfile?.first_name} variant="outlined" onChange={handleFirstName}/>
+                                </FormControl>
+                            </div>
+                            <div className='d-flex d-column gap-s width-48'>
+                                <FormControl>
+                                    <FormLabel>Last name</FormLabel>
+                                    <TextField required id="outlined-basic" value={updatedProfile?.last_name} variant="outlined" onChange={handleLastName}/>
+                                </FormControl>
+                            </div>
+                        </div>
+                        <div className='d-flex d-column gap-s'>
+                            <FormControl>
+                                <FormLabel>Email</FormLabel>
+                                <TextField required id="outlined-basic" value={updatedProfile?.email} sx={{ maxWidth: 800 }} variant="outlined" onChange={handleEmail}/>
                             </FormControl>
                         </div>
                         <div className='d-flex d-column gap-s'>
                             <FormControl>
-                                <FormLabel>Last name</FormLabel>
-                                <TextField required id="outlined-basic" value={updatedProfile?.last_name} sx={{ maxWidth: 392 }} variant="outlined" onChange={handleLastName}/>
+                                <FormLabel>Description</FormLabel>
+                                <TextField required  id="outlined-basic" value={updatedProfile?.description} sx={{ maxWidth: 800 }} variant="outlined" onChange={handleDescription}/>
                             </FormControl>
                         </div>
-                    </div>
-                    <div className='d-flex d-column gap-s'>
-                        <FormControl>
-                            <FormLabel>Email</FormLabel>
-                            <TextField required id="outlined-basic" value={updatedProfile?.email} sx={{ maxWidth: 800 }} variant="outlined" onChange={handleEmail}/>
-                        </FormControl>
-                    </div>
-                    <div className='d-flex d-column gap-s'>
-                        <FormControl>
-                            <FormLabel>Description</FormLabel>
-                            <TextField required  id="outlined-basic" value={updatedProfile?.description} sx={{ maxWidth: 800 }} variant="outlined" onChange={handleDescription}/>
-                        </FormControl>
-                    </div>
-                    <div className='border-1 br-4 d-flex space-between align-center mg-top-16' style={{ maxWidth: 800 }}>
-                        <span className='pd-left-16'> { updatedProfile?.is_verified ? 'Talent is Verified' : 'Talent is not Verified'}</span> 
-                        <Switch onChange={handleVerify} checked = {updatedProfile?.is_verified}/>
-                    </div>
-                    <div className='mg-top-16'>
-                    <Button type='submit' variant="contained" sx={{maxWidth: 200}}> Edit Profile </Button>
-                    </div>   
-                </form>
-            </div>
-            </Modal>
-        // </div>
+                        <div className='border-1 br-4 d-flex space-between align-center mg-top-16' style={{ maxWidth: 800 }}>
+                            <span className='pd-left-16'> { updatedProfile?.is_verified ? 'Talent is Verified' : 'Talent is not Verified'}</span> 
+                            <Switch onChange={handleVerify} checked = {updatedProfile?.is_verified}/>
+                        </div>
+                        <div className='mg-top-16'>
+                            <Button type='submit' variant="contained" sx={{maxWidth: 200}}> Edit Profile </Button>
+                        </div>   
+                    </form>
+                </div>
+            </Box>
+        </Modal>
     )
 }
 

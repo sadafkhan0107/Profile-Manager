@@ -1,16 +1,28 @@
-import { useProfile } from '../../context/profile-context';
+import { useProfile, useFilter } from '../../context';
 import ProfileCard from '../ProfileCard/ProfileCard';
 import Grid from '@mui/material/Unstable_Grid2';
-import { useFilter } from '../../context/filter-context';
+import { Pagination } from '@mui/material';
+import { useState } from 'react';
 
 const ProfileGrid = () => {
     const {data} = useProfile();
     const {sort,is_verified,searchInput} = useFilter();
+    const [currentPage, setCurrentPage] = useState(1);
+    const totalPages = Math.ceil(data?.length / 10);
+
+    const handlePageChange = (event, page) => {
+      setCurrentPage(page);
+    };
+
+    const startIndex = (currentPage - 1) * 10;
+    const endIndex = startIndex + 10;
+    const productsToShow = data?.slice(startIndex, endIndex);
+
     const getProfileBySearch = (profiles, searchInput) =>{
-        const filteredArray = searchInput ? profiles.filter((data) => ((data.first_name + data.last_name).toLowerCase().includes(searchInput.toLowerCase()))) : data
+        const filteredArray = searchInput ? profiles.filter((data) => ((data.first_name + data.last_name).toLowerCase().includes(searchInput.toLowerCase()))) : profiles
         return filteredArray
       }
-      const searchedItems = getProfileBySearch(data, searchInput)
+      const searchedItems = getProfileBySearch(productsToShow, searchInput)
 
       const getProfileBySort = (data, sort) =>{
         let filteredArray;
@@ -39,15 +51,24 @@ const ProfileGrid = () => {
 
 
     return(
-        <>
-            <Grid container spacing={2}>
+        <main className= 'pl-48'>
+            <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
             {verifiedProfiles?.map((profile, index) => (
                 <Grid xs={3} key={index}>
                 <ProfileCard profile = {profile} key = {profile.id}/>
                 </Grid>
             ))}
             </Grid>
-        </>
+            <div className='d-flex justify-end mg-top-16'>
+            <Pagination
+              count={totalPages}
+              page={currentPage}
+              onChange={handlePageChange}
+              color="primary"
+              size='small'
+            />
+          </div>
+        </main>
         
     )
 }

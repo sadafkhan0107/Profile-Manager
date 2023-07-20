@@ -3,10 +3,7 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { ProfileProvider } from './context/profile-context';
-import { DeleteProvider } from './context/delete-context';
-import { EditProfileProvider } from './context/edit-profile-context';
-import { FilterProvider } from './context/filter-context';
+import { ProfileProvider, DeleteProvider, EditProfileProvider, FilterProvider } from './context';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

@@ -1,38 +1,54 @@
-import IconButton from '@mui/material/IconButton';
-import CloseIcon from '@mui/icons-material/Close';
-import Button from '@mui/material/Button';
-import { useDelete } from '../../context/delete-context';
-import { useProfile } from '../../context/profile-context';
-
+import { useDelete,useProfile } from '../../context';
+import {Modal, Box, Button} from '@mui/material';
 
 const Delete = () => {
-    const {isDeleteModal, setIsDeleteModal, itemToDelete} = useDelete()
+    const {isDeleteModalOpen, setIsDeleteModalOpen, itemToDelete} = useDelete()
     const {data, setData} = useProfile();
+
     const handleCancelClick = () => {
-        setIsDeleteModal(false)
+        setIsDeleteModalOpen(false)
     }
+
     const handleDelete = () => {
         const updatedArr = data.filter((profile) => profile.id !== itemToDelete)
         setData(updatedArr);
-        setIsDeleteModal(false)
+        setIsDeleteModalOpen(false)
     }
+
+    const handleClose = () => {
+        setIsDeleteModalOpen(false)
+    }
+
+    const style = {
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: '30vw',
+        bgcolor: 'background.paper',
+        border: '2px solid #000',
+        boxShadow: 24,
+        p: 4,
+      };
+
     return(
-        <div className='fixed top-0 left-0 d-flex align-center justify-center w-100 h-100 bg-modal z-99'>
-            <div className='delete-box border-1 pd-32'>
+        <Modal
+            open={isDeleteModalOpen}
+            onClose={handleClose}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+        >
+            <Box sx={style}>
                 <div className='d-flex space-between border-btm-1 align-center'>
                     <span>Remove Profile</span>
-                    <IconButton aria-label="delete">
-                        <CloseIcon />
-                    </IconButton>
                 </div>
-                <p className='border-btm-1'>Removed file will be deleted premenantly and won't be available anymore.</p>
-                <div className='d-flex gap-m'>
+                <p>Removed file will be deleted premenantly and won't be available anymore.</p>
+                <div className='d-flex gap-m justify-center mg-top-32'>
                     <Button variant="contained" onClick={handleCancelClick}>Cancel</Button>
                     <Button variant="contained" onClick={handleDelete}>Delete</Button>
                 </div>
-            </div>
-        </div>
-
+            </Box>
+        </Modal>
     )
 }
 

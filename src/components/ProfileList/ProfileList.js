@@ -1,41 +1,68 @@
 import * as React from "react";
-import { styled } from "@mui/material/styles";
-import ListItem from "@mui/material/ListItem";
-import ListItemAvatar from "@mui/material/ListItemAvatar";
-import ListItemText from "@mui/material/ListItemText";
-import Avatar from "@mui/material/Avatar";
-import IconButton from "@mui/material/IconButton";
-import VerifiedIcon from "@mui/icons-material/Verified";
-import { useProfile } from "../../context/profile-context";
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
-import SettingsIcon from '@mui/icons-material/Settings';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
+import {ListItem, ListItemAvatar, ListItemText, Avatar, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Pagination} from "@mui/material";
+import { useProfile, useFilter } from "../../context";
 import { useState } from "react";
 import Settings from "../Extras/Settings";
-
-const Demo = styled("div")(({ theme }) => ({
-  backgroundColor: theme.palette.background.paper
-}));
+import VerifiedIcon from "@mui/icons-material/Verified";
+import SettingsIcon from '@mui/icons-material/Settings';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 
 export default function ProfileList() {
     const {data} = useProfile();
-    const [isSettingsOpen, setIsSettingOpen] = useState(false)
-    const [Id, setId] = useState()
-    const handleSettingClick = (id) => {
-        setIsSettingOpen(true)
+    const {sort,is_verified,searchInput} = useFilter();
+    const [Id, setId] = useState();
+    const [anchorEl, setAnchorEl] = useState(null);
+    const [currentPage, setCurrentPage] = useState(1);
+    const totalPages = Math.ceil(data?.length / 5);
+
+    const handlePageChange = (event, page) => {
+      setCurrentPage(page);
+    };
+
+    const startIndex = (currentPage - 1) * 5;
+    const endIndex = startIndex + 5;
+    const productsToShow = data?.slice(startIndex, endIndex);
+
+    const handleSettingClick = (event, id) => {
+        setAnchorEl(event.currentTarget);
         setId(id)
         console.log("click")
+        console.log(event.currentTarget)
+    }
+    const getProfileBySearch = (profiles, searchInput) =>{
+      const filteredArray = searchInput ? profiles.filter((data) => ((data.first_name + data.last_name).toLowerCase().includes(searchInput.toLowerCase()))) : profiles
+      return filteredArray
+    }
+    const searchedItems = getProfileBySearch(productsToShow, searchInput)
+
+    const getProfileBySort = (data, sort) =>{
+      let filteredArray;
+      if(sort==="inc")
+      {
+         filteredArray = [...data].sort((a, b) => (a.email).toLowerCase() > (b.email).toLowerCase() ? 1 : -1 )
+      }
+      else if(sort === "dec")
+      {
+         filteredArray = [...data].sort((a, b) => (a.email).toLowerCase() < (b.email).toLowerCase() ? 1 : -1 )
+      }
+      else{
+          return data
+      }
+      return filteredArray;
+    }
+    const filteredBySort = getProfileBySort(searchedItems, sort);
+
+
+    const getVerifiedProfiles = (data, is_verified) => {
+      const updatedArr = is_verified ? data.filter((profile) => profile.is_verified) : data
+      return updatedArr
     }
 
+    const verifiedProfiles = getVerifiedProfiles(filteredBySort, is_verified)
+
   return (
-    <div className="d-flex gap-m">
+    <div>
         <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
         <TableHead>
@@ -48,7 +75,7 @@ export default function ProfileList() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {data?.map((row) => (
+          {verifiedProfiles?.map((row) => (
             <>
             <TableRow
               key={row.id}
@@ -56,9 +83,9 @@ export default function ProfileList() {
             >
               <TableCell component="th" scope="row" sx={{ width: 300 }}>
                 <ListItem
-                    secondaryAction={
+                    secondaryAction={ 
                         <IconButton aria-label="Verified Icon">
-                        <VerifiedIcon color="primary"/>
+                        {row.is_verified && <VerifiedIcon color="primary"/>}
                         </IconButton>
                     }
                     >
@@ -74,7 +101,7 @@ export default function ProfileList() {
               <TableCell align="left">{row.email}</TableCell>
               <TableCell align="left">{row.description}</TableCell>
               <TableCell align="left"><IconButton aria-label="expand row" 
-              onClick= {() => handleSettingClick(row.id)}><MoreVertIcon /> 
+              onClick= {(event) => handleSettingClick(event, row.id)}><MoreVertIcon /> 
               </IconButton>
               </TableCell>
             </TableRow>  
@@ -82,13 +109,18 @@ export default function ProfileList() {
           ))}
         </TableBody>
       </Table>
-      {isSettingsOpen && <Settings id={Id} setIsSettingOpen={setIsSettingOpen}/>}
+      <Settings id={Id} anchorEl={anchorEl} setAnchorEl={setAnchorEl}/>
     </TableContainer>
+    <div className='d-flex justify-end'>
+            <Pagination
+              count={totalPages}
+              page={currentPage}
+              onChange={handlePageChange}
+              color="primary"
+              size='small'
+            />
+          </div>
     </div>
     
   );
 }
-
-// {`${item.first_name} ${item.last_name}`}
-
-// {(item.first_name + " " + item.last_name).length > 12 ? (item.first_name + " " + item.last_name).substring(0, 12)+"..." : (item.first_name + " " + item.last_name)}
