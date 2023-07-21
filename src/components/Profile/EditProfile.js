@@ -1,4 +1,4 @@
-import { FormLabel, FormControl, Box, Modal, IconButton, Button, Switch, TextField } from '@mui/material';
+import { FormLabel, FormControl, Box, Modal, IconButton, Button, Switch, TextField, useMediaQuery } from '@mui/material';
 import { useState } from 'react';
 import { useProfile, useEditProfile } from '../../context';
 import CloseIcon from '@mui/icons-material/Close';
@@ -8,6 +8,7 @@ const EditProfile = () => {
     const {editOpen, setEditOpen, editId} = useEditProfile()
     const profile = data?.find((profile) => profile.id === editId)
     const [updatedProfile, setUpdatedProfile] = useState(profile)
+     const isMobileView = useMediaQuery("(max-width: 600px)");
 
     const handleClose = () => {
         setEditOpen(false)
@@ -49,7 +50,7 @@ const EditProfile = () => {
         top: '50%',
         left: '50%',
         transform: 'translate(-50%, -50%)',
-        width: '70vw',
+        width: `${isMobileView ? '100vw' : '70vw'}`,
         bgcolor: 'background.paper',
         border: '2px solid #000',
         boxShadow: 24,
