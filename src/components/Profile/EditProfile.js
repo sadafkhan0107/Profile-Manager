@@ -42,7 +42,6 @@ const EditProfile = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const data = await updateProfile(updatedProfile.first_name, updatedProfile.last_name, updatedProfile.is_verified, updatedProfile.email, updatedProfile.description, updatedProfile.image_url, editId)
-        // let newArr = data.map((profile) => profile.id === updatedProfile.id ? updatedProfile : profile)
         setData(data)
         setEditOpen(false)
     }

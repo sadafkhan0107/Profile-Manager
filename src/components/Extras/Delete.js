@@ -1,16 +1,17 @@
 import { useDelete,useProfile } from '../../context';
 import {Modal, Box, Button} from '@mui/material';
+import { deleteProfile } from '../../services/getDeleteProfile';
 
 const Delete = () => {
     const {isDeleteModalOpen, setIsDeleteModalOpen, itemToDelete} = useDelete()
-    const {data, setData} = useProfile();
+    const {setData} = useProfile();
 
     const handleCancelClick = () => {
         setIsDeleteModalOpen(false)
     }
 
-    const handleDelete = () => {
-        const updatedArr = data.filter((profile) => profile.id !== itemToDelete)
+    const handleDelete = async() => {
+        const updatedArr = await deleteProfile(itemToDelete)
         setData(updatedArr);
         setIsDeleteModalOpen(false)
     }

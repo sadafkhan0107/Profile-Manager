@@ -58,7 +58,6 @@ export const createProfile = async (first_name, last_name, is_verified, email, d
 
     try {
       const mutationResponse = await axios.post(api_url, { query: mutation, variables }, { headers });
-      console.log(mutationResponse?.data?.data?.createProfile)
       return mutationResponse?.data?.data?.createProfile;
       
     } catch (error) {

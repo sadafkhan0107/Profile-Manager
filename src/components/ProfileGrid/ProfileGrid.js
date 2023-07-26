@@ -6,11 +6,11 @@ import { useState } from 'react';
 
 const ProfileGrid = () => {
     const {data} = useProfile();
-    const {sort,is_verified,searchInput} = useFilter();
+    const {sort,is_verified} = useFilter();
     const [currentPage, setCurrentPage] = useState(1);
     const totalPages = Math.ceil(data?.length / 10);
 
-    const handlePageChange = (event, page) => {
+    const handlePageChange = (page) => {
       setCurrentPage(page);
     };
 
@@ -18,11 +18,6 @@ const ProfileGrid = () => {
     const endIndex = startIndex + 10;
     const productsToShow = data?.slice(startIndex, endIndex);
 
-    const getProfileBySearch = (profiles, searchInput) =>{
-        const filteredArray = searchInput ? profiles.filter((data) => ((data.first_name + data.last_name).toLowerCase().includes(searchInput.toLowerCase()))) : profiles
-        return filteredArray
-      }
-      const searchedItems = getProfileBySearch(productsToShow, searchInput)
 
       const getProfileBySort = (data, sort) =>{
         let filteredArray;
@@ -39,7 +34,7 @@ const ProfileGrid = () => {
         }
         return filteredArray;
       }
-      const filteredBySort = getProfileBySort(searchedItems, sort);
+      const filteredBySort = getProfileBySort(productsToShow, sort);
 
 
       const getVerifiedProfiles = (data, is_verified) => {

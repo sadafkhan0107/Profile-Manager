@@ -3,7 +3,6 @@ import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import {Button, IconButton, Switch} from '@mui/material';
 import { useFilter } from '../../context';
 
-
 const Filter = () => {
     const { dispatch} = useFilter();
 
@@ -21,7 +20,7 @@ const Filter = () => {
         })
     }
 
-    const handleVerified = (e) => {
+    const handleVerified = async (e) => {
         dispatch({
             type: "verify",
             payload: e.target.checked

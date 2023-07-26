@@ -10,13 +10,13 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 export default function ProfileList() {
     const {data} = useProfile();
-    const {sort,is_verified,searchInput} = useFilter();
+    const {sort,is_verified} = useFilter();
     const [Id, setId] = useState();
     const [anchorEl, setAnchorEl] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
     const totalPages = Math.ceil(data?.length / 5);
 
-    const handlePageChange = (event, page) => {
+    const handlePageChange = (page) => {
       setCurrentPage(page);
     };
 
@@ -30,11 +30,6 @@ export default function ProfileList() {
         console.log("click")
         console.log(event.currentTarget)
     }
-    const getProfileBySearch = (profiles, searchInput) =>{
-      const filteredArray = searchInput ? profiles.filter((data) => ((data.first_name + data.last_name).toLowerCase().includes(searchInput.toLowerCase()))) : profiles
-      return filteredArray
-    }
-    const searchedItems = getProfileBySearch(productsToShow, searchInput)
 
     const getProfileBySort = (data, sort) =>{
       let filteredArray;
@@ -51,7 +46,7 @@ export default function ProfileList() {
       }
       return filteredArray;
     }
-    const filteredBySort = getProfileBySort(searchedItems, sort);
+    const filteredBySort = getProfileBySort(productsToShow, sort);
 
 
     const getVerifiedProfiles = (data, is_verified) => {
@@ -111,7 +106,7 @@ export default function ProfileList() {
       </Table>
       <Settings id={Id} anchorEl={anchorEl} setAnchorEl={setAnchorEl}/>
     </TableContainer>
-    <div className='d-flex justify-end'>
+    <div className='d-flex justify-end pd-16'>
             <Pagination
               count={totalPages}
               page={currentPage}
