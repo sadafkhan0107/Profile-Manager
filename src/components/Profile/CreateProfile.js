@@ -1,8 +1,8 @@
 import { FormLabel, FormControl, Box, Modal, IconButton, Button, Switch, TextField,useMediaQuery } from '@mui/material';
 import { useState } from 'react';
 import { useProfile } from '../../context';
-import { v4 as uuid} from 'uuid';
 import CloseIcon from '@mui/icons-material/Close';
+import { createProfile } from '../../services/createProfile';
 
 const CreateProfile = ({isCreateProfileModalOpen,setIsCreateProfileModalOpen}) => {
     const [newProfile, setNewProfile] = useState({image_url:'', first_name:'', last_name:'', email:'',is_verified: false, description:''})
@@ -37,10 +37,11 @@ const CreateProfile = ({isCreateProfileModalOpen,setIsCreateProfileModalOpen}) =
         setNewProfile({...newProfile, description: e.target.value})
     }
 
-    const handleSubmit = (e) => {
+    
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        let newArr = [...data, {...newProfile, id:uuid()}]
-        setData(newArr)
+        const profile = await createProfile(newProfile.first_name, newProfile.last_name, newProfile.is_verified, newProfile.email, newProfile.description, newProfile.image_url)
+        setData([...data, profile])
         setNewProfile({image_url:'', first_name:'', last_name:'', email:'',is_verified: false, description:''})
         setIsCreateProfileModalOpen(false)
     }

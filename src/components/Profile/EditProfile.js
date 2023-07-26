@@ -2,6 +2,7 @@ import { FormLabel, FormControl, Box, Modal, IconButton, Button, Switch, TextFie
 import { useState } from 'react';
 import { useProfile, useEditProfile } from '../../context';
 import CloseIcon from '@mui/icons-material/Close';
+import { updateProfile } from '../../services/updateProfile';
 
 const EditProfile = () => {
     const {data, setData} = useProfile();
@@ -38,10 +39,11 @@ const EditProfile = () => {
         setUpdatedProfile({...updatedProfile, description: e.target.value})
     }
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        let newArr = data.map((profile) => profile.id === updatedProfile.id ? updatedProfile : profile)
-        setData(newArr)
+        const data = await updateProfile(updatedProfile.first_name, updatedProfile.last_name, updatedProfile.is_verified, updatedProfile.email, updatedProfile.description, updatedProfile.image_url, editId)
+        // let newArr = data.map((profile) => profile.id === updatedProfile.id ? updatedProfile : profile)
+        setData(data)
         setEditOpen(false)
     }
 
