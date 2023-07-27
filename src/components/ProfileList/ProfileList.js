@@ -15,14 +15,16 @@ export default function ProfileList() {
     const [anchorEl, setAnchorEl] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
     const totalPages = Math.ceil(data?.length / 5);
-
-    const handlePageChange = (page) => {
+    console.log({totalPages})
+    const handlePageChange = (e, page) => {
+      console.log({page})
       setCurrentPage(page);
     };
-
+    console.log({currentPage})
     const startIndex = (currentPage - 1) * 5;
     const endIndex = startIndex + 5;
     const productsToShow = data?.slice(startIndex, endIndex);
+    // console.log(currentPage, startIndex, endIndex, productsToShow);
 
     const handleSettingClick = (event, id) => {
         setAnchorEl(event.currentTarget);
@@ -55,6 +57,7 @@ export default function ProfileList() {
     }
 
     const verifiedProfiles = getVerifiedProfiles(filteredBySort, is_verified)
+    console.log(verifiedProfiles)
 
   return (
     <div>

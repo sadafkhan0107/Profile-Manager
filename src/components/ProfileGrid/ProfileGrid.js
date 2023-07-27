@@ -10,7 +10,7 @@ const ProfileGrid = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const totalPages = Math.ceil(data?.length / 10);
 
-    const handlePageChange = (page) => {
+    const handlePageChange = (e, page) => {
       setCurrentPage(page);
     };
 
